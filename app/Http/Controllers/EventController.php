@@ -7,6 +7,8 @@ use App\Http\Requests\SaveEventRequest;
 use App\Models\Event;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use App\Policies\EventPolicy;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -29,7 +31,11 @@ class EventController extends Controller
      */
     public function create()
     {
-        return view('events.create');
+        if (Auth::check()){
+            return view('events.create');
+        }else{
+            return redirect()->route('events.index');
+        }
     }
 
     /**
@@ -75,7 +81,11 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        return view('events.edit', compact('event'));
+        if (Auth::check()){
+            return view('events.edit', compact('event'));
+        }else{
+            return redirect()->route('events.index');
+        }
     }
 
     /**
@@ -104,6 +114,10 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
+        if (!Auth::check()){
+            return redirect()->route('events.index');
+        }
+        
         $event->delete();
 
         return redirect()->route('events.index')->with('message', 'Event deleted!!');
