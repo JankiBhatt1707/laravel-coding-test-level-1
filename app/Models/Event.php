@@ -18,6 +18,8 @@ class Event extends Model
 
     public $timestamps = false;
 
+    protected $guarded = ['id'];
+
     /**
      * Boot config
      *
